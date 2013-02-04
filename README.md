@@ -7,6 +7,8 @@ Sublime MOE Dict
 *Sublime MOE Dict* lets you to query definations of Chinese characters
 or Chine phrases without leaving your editor.
 
+<iframe width="420" height="315" src="http://www.youtube.com/embed/jmjsdU9RbJw" frameborder="0" allowfullscreen></iframe>
+
 Installation
 ------------
 
