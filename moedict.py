@@ -5,6 +5,11 @@ import sublime, sublime_plugin
 import threading
 import urllib, urllib2, json
 
+# What the command actually does is to fetch JSON files representing
+# definitions of Chinese characters or phrases stored on Audrey Tang's
+# personal website, then insert them to the editor, while We fetch and
+# cache "prefix.json" for doing auto-completion.
+
 PREFIX_MAP = None
 PREFIX_JSON_URL = "http://www.audreyt.org/newdict/moedict-webkit/prefix.json"
 DATA_JSON_TEMPLATE = "http://www.audreyt.org/newdict/moedict-webkit/api/data/%s.json"
@@ -31,10 +36,6 @@ class MoeDictCommand(sublime_plugin.WindowCommand):
 	The Sublime Text plug-in which queries definitions within MOE
 	Chinese Dictionary.
 	'''
-
-	# What the command actually do is to fetch JSON files representing
-	# definitions of Chinese characters or phrases stored on Audrey
-	# Tang's personal website.
 
 	prefix = ''
 	current_list = []
