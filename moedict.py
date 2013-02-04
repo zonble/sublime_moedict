@@ -15,28 +15,33 @@ class APICall(threading.Thread):
 	'''
 	def __init__(self, group=None, target=None, name=None,
 		args=(), kwargs=None, verbose=None):
-		threading.Thread.__init__(self, group, target, name, args,
-								  kwargs, verbose)
+		threading.Thread.__init__(self, group, target, name, args, kwargs, verbose)
 		self._return = None
 	def run(self):
 		if self._Thread__target is not None:
 			print self._Thread__args
 			print self._Thread__kwargs
-			self._return = self._Thread__target(*self._Thread__args,
-												 **self._Thread__kwargs)
+			self._return = self._Thread__target(*self._Thread__args, **self._Thread__kwargs)
 	def join(self):
 		threading.Thread.join(self)
 		return self._return
 
 class MoeDictCommand(sublime_plugin.WindowCommand):
+	'''
+	The Sublime Text plug-in which queries definitions within MOE
+	Chinese Dictionary.
+	'''
+
+	# What the command actually do is to fetch JSON files representing
+	# definitions of Chinese characters or phrases stored on Audrey
+	# Tang's personal website.
 
 	prefix = ''
 	current_list = []
 	current_item = ''
 
 	def run(self):
-		self.window.show_input_panel('Prefix:', self.prefix,
-							 self.on_input_prefix, None, None)
+		self.window.show_input_panel('Prefix:', self.prefix, self.on_input_prefix, None, None)
 
 	def on_input_prefix(self, input):
 		def fetch_prefix():
@@ -108,8 +113,3 @@ class MoeDictCommand(sublime_plugin.WindowCommand):
 			edit = view.begin_edit()
 			view.insert(edit, 0, text)
 			view.end_edit(edit)
-
-
-
-
-
