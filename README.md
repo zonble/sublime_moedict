@@ -2,7 +2,7 @@ Sublime MOE Dict
 ================
 
 * Weizhong Yang (a.k.a *zonble*)
-* <zonble at gmail.com>
+* zonble at gmail.com
 
 *Sublime MOE Dict* lets you to query definations of Chinese characters
 or Chine phrases without leaving your editor.
