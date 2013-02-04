@@ -70,14 +70,17 @@ class MoeDictCommand(sublime_plugin.WindowCommand):
 				print url
 				return json.loads(urllib2.urlopen(url).read())
 			except Exception, e:
-				sublime.error_message('Failed to load MOE dictionary!' + str(e))
+				sublime.error_message('Failed to load MOE dictionary! ' + str(e))
 
 		def render(data):
-			text = ''
+			text = '-' * 76 + '\n'
 			if 'bopomofo' in data:
-				text += '* %s\n' % data['bopomofo']
+				text += u'* 注音一式： %s\n' % data['bopomofo']
 			if 'bopomofo2' in data:
-				text += '* %s\n' % data['bopomofo2']
+				text += u'* 注音二式： %s\n' % data['bopomofo2']
+			if 'hanyu_pinyin' in data:
+				text += u'* 漢語拼音： %s\n' % data['hanyu_pinyin']
+
 
 			if 'definitions' in data:
 				from collections import defaultdict
@@ -87,7 +90,7 @@ class MoeDictCommand(sublime_plugin.WindowCommand):
 					definitions[key].append(d)
 
 				for pos in definitions:
-					text += '\n## %s \n\n' % pos if len(pos) else '\n'
+					text += '\n[%s]\n\n' % pos if len(pos) else '\n'
 					count = 1
 					section = definitions[pos]
 					for d in section:
@@ -97,9 +100,13 @@ class MoeDictCommand(sublime_plugin.WindowCommand):
 							text += '%s\n' % d['definition']
 						if 'quote' in d:
 							for quote in d['quote']:
-								text += '> %s\n' % quote
+								text += '    * %s\n' % quote
+						if 'link' in d:
+							for link in d['link']:
+								text += '%s\n' % link
+
 						count += 1
-			return text
+			return text + '\n\n'
 
 		self.current_item = self.current_list[picked] if picked != -1 else self.prefix
 		thread = APICall(target=fetch_item)
@@ -111,6 +118,12 @@ class MoeDictCommand(sublime_plugin.WindowCommand):
 			for d in data:
 				text += render(d)
 			view = self.window.new_file()
+			view.set_name(self.current_item)
+			try:
+				view.set_syntax_file(u'Packages/Markdown/Markdown.tmLanguage'
+				)
+			except:
+				pass
 			edit = view.begin_edit()
 			view.insert(edit, 0, text)
 			view.end_edit(edit)
