@@ -11,8 +11,8 @@ import urllib, urllib2, json
 # cache "prefix.json" for doing auto-completion.
 
 PREFIX_MAP = None
-PREFIX_JSON_URL = "http://www.audreyt.org/newdict/moedict-webkit/prefix.json"
-DATA_JSON_TEMPLATE = "http://www.audreyt.org/newdict/moedict-webkit/api/data/%s.json"
+PREFIX_JSON_URL = "http://www.moedict.tw/prefix.json"
+DATA_JSON_TEMPLATE = "http://www.moedict.tw/uni/%s.json"
 
 class APICall(threading.Thread):
 	'''
@@ -73,40 +73,53 @@ class MoeDictCommand(sublime_plugin.WindowCommand):
 				sublime.error_message('Failed to load MOE dictionary! ' + str(e))
 
 		def render(data):
-			text = '-' * 76 + '\n'
-			if 'bopomofo' in data:
-				text += u'* 注音一式： %s\n' % data['bopomofo']
-			if 'bopomofo2' in data:
-				text += u'* 注音二式： %s\n' % data['bopomofo2']
-			if 'hanyu_pinyin' in data:
-				text += u'* 漢語拼音： %s\n' % data['hanyu_pinyin']
+			text = ''
+			if 'radical' in data:
+				text += u'* 部首： %s\n' % data['radical']
+			if 'stroke_count' in data:
+				text += u'* 筆畫： %s\n' % str(data['stroke_count'])
+			if 'non_radical_stroke_count' in data:
+				text += u'* 非部首筆畫： %s\n' % str(data['non_radical_stroke_count'])
+			text += '\n'
 
+			for heteronym in data['heteronyms']:
+				text += '-' * 76 + '\n'
+				if 'bopomofo' in heteronym:
+					text += u'* 注音一式： %s\n' % heteronym['bopomofo']
+				if 'bopomofo2' in heteronym:
+					text += u'* 注音二式： %s\n' % heteronym['bopomofo2']
+				if 'hanyu_pinyin' in heteronym:
+					text += u'* 漢語拼音： %s\n' % heteronym['hanyu_pinyin']
 
-			if 'definitions' in data:
-				from collections import defaultdict
-				definitions = defaultdict(list)
-				for d in data['definitions']:
-					key = d.get('pos', '')
-					definitions[key].append(d)
+				if 'definitions' in heteronym:
+					from collections import defaultdict
+					definitions = defaultdict(list)
+					for d in heteronym['definitions']:
+						key = d.get('type', '')
+						definitions[key].append(d)
 
-				for pos in definitions:
-					text += '\n[%s]\n\n' % pos if len(pos) else '\n'
-					count = 1
-					section = definitions[pos]
-					for d in section:
-						if len(section) > 1:
-							text += '%d. %s\n' % (count, d['definition'])
-						else:
-							text += '%s\n' % d['definition']
-						if 'quote' in d:
-							for quote in d['quote']:
-								text += '    * %s\n' % quote
-						if 'link' in d:
-							for link in d['link']:
-								text += '%s\n' % link
+					for pos in definitions:
+						text += '\n[%s]\n\n' % pos if len(pos) else '\n'
+						count = 1
+						section = definitions[pos]
+						for d in section:
+							if 'def' in d:
+								if len(section) > 1:
+									text += '%d. %s\n' % (count, d['def'])
+								else:
+									text += '%s\n' % d['def']
+							if 'example' in d:
+								for quote in d['example']:
+									text += '    * %s\n' % quote
+							if 'quote' in d:
+								for quote in d['quote']:
+									text += '    * %s\n' % quote
+							if 'link' in d:
+								for link in d['link']:
+									text += '%s\n' % link
 
-						count += 1
-			return text + '\n\n'
+							count += 1
+				return text + '\n\n'
 
 		self.current_item = self.current_list[picked] if picked != -1 else self.prefix
 		thread = APICall(target=fetch_item)
@@ -115,8 +128,7 @@ class MoeDictCommand(sublime_plugin.WindowCommand):
 		print type(data)
 		if data and len(data):
 			text = '# %s\n\n' % self.current_item
-			for d in data:
-				text += render(d)
+			text += render(data)
 			view = self.window.new_file()
 			view.set_name(self.current_item)
 			try:
