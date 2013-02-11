@@ -2,12 +2,13 @@ Sublime MOE Dict
 ================
 
 * Weizhong Yang (a.k.a *zonble*)
-* zonble at gmail.com
+* zonble at gmail dot com
 
 *Sublime MOE Dict* lets you to query definations of Chinese characters
 or Chine phrases without leaving your editor.
 
-<iframe width="420" height="315" src="http://www.youtube.com/embed/jmjsdU9RbJw" frameborder="0" allowfullscreen></iframe>
+The plug-in is tested only on Sublime Text 2 now, and it does not
+support Sublime Text 3.
 
 Installation
 ------------
@@ -15,12 +16,13 @@ Installation
 * Clone the project. Save it as "MOEDict" folder.
 * Move the folder containing the project cloned to
   `~/Library/Application Support/Sublime Text 2/Packages`.
-* Launch Sublime Text 2.
+* Launch Sublime Text.
 
 How to Use the Plug-in?
 -----------------------
 
 * Select "Tools", "Command Palette"... in the menu. Or, press
-  command + shift + P.
+  command + shift + P on Mac OS X.
 * Select "MOE Dictionary: Query".
+* Type in what are you looking for.
 * Done!
