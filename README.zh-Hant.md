@@ -4,6 +4,9 @@ Sublime Text 教育部國語詞典
 * 楊維中 (a.k.a *zonble*)
 * zonble at gmail dot com
 
+> **⚠️ 注意：** 本 plug-in 所使用的網路服務（moedict.tw）已停止運作，
+> **本 plug-in 目前已無法使用**。
+
 *Sublime Text 教育部國語詞典* 是一套供 Sublime Text 使用的國語詞典
 plug-in，您可以直接在 Sublime Text 這套跨平台的文字編輯軟體中，直接快速
 搜尋教育部國語詞典的詞彙。目前支援 Sublime Text 2。
